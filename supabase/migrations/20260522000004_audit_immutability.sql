@@ -22,7 +22,7 @@ alter table public.audit_events force row level security;
 create policy "audit_select" on public.audit_events
   for select to authenticated
   using (
-    (select auth.active_role()) in ('admin', 'audit-officer')
+    (select public.active_role()) in ('admin', 'audit-officer')
   );
 
 -- No UPDATE or DELETE policy defined = implicitly denied at RLS level for all roles

@@ -10,12 +10,13 @@
 
 -- Reads institution_id from JWT app_metadata (set by custom_access_token_hook)
 -- Using SELECT wrapper caches per-statement — critical for RLS performance on large tables
-create or replace function auth.institution_id() returns uuid as $$
+-- NOTE: Placed in public schema (not auth) so migrations run without superuser access.
+create or replace function public.institution_id() returns uuid as $$
   select (auth.jwt()->'app_metadata'->>'institution_id')::uuid
 $$ language sql stable security definer set search_path = '';
 
 -- Reads active_role from JWT app_metadata
-create or replace function auth.active_role() returns text as $$
+create or replace function public.active_role() returns text as $$
   select auth.jwt()->'app_metadata'->>'active_role'
 $$ language sql stable security definer set search_path = '';
 
@@ -29,22 +30,22 @@ alter table public.institutions force row level security;
 -- Users can view institutions in their own institution (admins need to see all in same institution)
 create policy "institution_select" on public.institutions
   for select to authenticated
-  using (id = (select auth.institution_id()));
+  using (id = (select public.institution_id()));
 
 -- Only admins can insert/update institutions
 create policy "institution_insert" on public.institutions
   for insert to authenticated
   with check (
-    id = (select auth.institution_id())
-    and (select auth.active_role()) = 'admin'
+    id = (select public.institution_id())
+    and (select public.active_role()) = 'admin'
   );
 
 create policy "institution_update" on public.institutions
   for update to authenticated
-  using (id = (select auth.institution_id()))
+  using (id = (select public.institution_id()))
   with check (
-    id = (select auth.institution_id())
-    and (select auth.active_role()) = 'admin'
+    id = (select public.institution_id())
+    and (select public.active_role()) = 'admin'
   );
 
 -- ============================================================
@@ -59,7 +60,7 @@ create policy "user_profiles_select" on public.user_profiles
   for select to authenticated
   using (
     id = auth.uid()
-    or institution_id = (select auth.institution_id())
+    or institution_id = (select public.institution_id())
   );
 
 -- Users can only insert their own profile (created via trigger or server action)
@@ -73,15 +74,15 @@ create policy "user_profiles_update" on public.user_profiles
   using (
     id = auth.uid()
     or (
-      institution_id = (select auth.institution_id())
-      and (select auth.active_role()) = 'admin'
+      institution_id = (select public.institution_id())
+      and (select public.active_role()) = 'admin'
     )
   )
   with check (
     id = auth.uid()
     or (
-      institution_id = (select auth.institution_id())
-      and (select auth.active_role()) = 'admin'
+      institution_id = (select public.institution_id())
+      and (select public.active_role()) = 'admin'
     )
   );
 
@@ -97,23 +98,23 @@ create policy "user_roles_select" on public.user_roles
   for select to authenticated
   using (
     user_id = auth.uid()
-    or institution_id = (select auth.institution_id())
+    or institution_id = (select public.institution_id())
   );
 
 -- Only admins can assign roles (INSERT)
 create policy "user_roles_insert" on public.user_roles
   for insert to authenticated
   with check (
-    institution_id = (select auth.institution_id())
-    and (select auth.active_role()) = 'admin'
+    institution_id = (select public.institution_id())
+    and (select public.active_role()) = 'admin'
   );
 
 -- Only admins can remove roles (DELETE)
 create policy "user_roles_delete" on public.user_roles
   for delete to authenticated
   using (
-    institution_id = (select auth.institution_id())
-    and (select auth.active_role()) = 'admin'
+    institution_id = (select public.institution_id())
+    and (select public.active_role()) = 'admin'
   );
 
 -- ============================================================

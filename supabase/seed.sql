@@ -27,7 +27,7 @@ begin
     'authenticated',
     'authenticated',
     'admin@grcnexus.gov.zw',
-    crypt('Admin@GRC2026!', gen_salt('bf')),
+    extensions.crypt('Admin@GRC2026!', extensions.gen_salt('bf')),
     now(),
     '{"provider":"email","providers":["email"]}',
     '{"first_name":"System","last_name":"Administrator"}',
