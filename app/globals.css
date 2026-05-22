@@ -4,28 +4,50 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --font-playfair: 'Playfair Display', serif;
-  --font-dm-sans: 'DM Sans', sans-serif;
-  --font-dm-mono: 'DM Mono', monospace;
+@layer base {
+  :root {
+    --font-playfair: 'Playfair Display', serif;
+    --font-dm-sans: 'DM Sans', sans-serif;
+    --font-dm-mono: 'DM Mono', monospace;
 
-  /* Color tokens */
-  --c-ink: #050D1B;
-  --c-ink-mid: #0B1625;
-  --c-paper: #F3F7FD;
-  --c-paper-line: #D7E2EF;
-  --c-ink-on-paper: #0B1625;
-  --c-ink-on-paper-2: #3A5270;
-  --c-gold: #C8A44A;
-  --c-gold-pale: #F3E2BC;
-  --c-ok: #27AE60;
-  --c-warn: #E67E22;
-  --c-err: #E74C3C;
+    /* GRC-Nexus color tokens */
+    --c-ink: #050D1B;
+    --c-ink-mid: #0B1625;
+    --c-paper: #F3F7FD;
+    --c-paper-line: #D7E2EF;
+    --c-gold: #C8A44A;
+    --c-gold-pale: #F3E2BC;
+    --c-ok: #27AE60;
+    --c-warn: #E67E22;
+    --c-err: #E74C3C;
+
+    /* shadcn/ui CSS variables (slate base) */
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+    --radius: 0.5rem;
+  }
 }
 
 @layer base {
   * {
-    @apply border-paper-border;
+    @apply border-border;
   }
 
   body {
