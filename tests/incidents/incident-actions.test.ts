@@ -202,7 +202,7 @@ describe('Incident Server Actions', () => {
           institution_id: 'inst-1',
           status: 'escalated',
           severity: 'high',
-          assigned_investigator_id: 'u-3',
+          assigned_investigator_id: null,
         },
         error: null,
       })
