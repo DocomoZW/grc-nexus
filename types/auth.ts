@@ -1,6 +1,7 @@
 export type AppRole =
   | 'admin'
   | 'board-member'
+  | 'board-secretary'
   | 'ceo'
   | 'risk-officer'
   | 'audit-officer'
@@ -24,6 +25,7 @@ export interface AppMetadata {
 export const ROLE_DESCRIPTIONS: Record<AppRole, string> = {
   'admin': 'Full administrative access and user management',
   'board-member': 'Board governance, meetings, and resolutions',
+  'board-secretary': 'Board secretariat operations and meeting administration',
   'ceo': 'Executive oversight and strategic performance',
   'risk-officer': 'Risk register and treatment management',
   'audit-officer': 'Audit findings and compliance review',
