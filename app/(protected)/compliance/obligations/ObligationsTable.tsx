@@ -129,6 +129,8 @@ export function ObligationsTable({ rows }: { rows: ObligationRow[] }) {
         filterFn: (row, id, value) => value === 'all' || row.getValue(id) === value,
       }),
       // Evidence count chip (80px)
+      // FIXME: evidence_count is a stub — all values are 0 until listObligations includes
+      // a count join (ME-03). Sorting disabled to avoid misleading sort affordance.
       column.accessor('evidence_count', {
         header: 'Evidence',
         cell: (info) => (
@@ -136,7 +138,7 @@ export function ObligationsTable({ rows }: { rows: ObligationRow[] }) {
             {info.getValue()}
           </span>
         ),
-        enableSorting: true,
+        enableSorting: false,
       }),
       // Actions (View + Edit, 80px)
       column.display({
