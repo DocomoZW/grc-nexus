@@ -11,6 +11,7 @@ import { MFAStatusSection } from './MFAStatusSection'
 import { ExecutiveFilterBar } from './ExecutiveFilterBar'
 import { KpiSummaryCard } from './KpiSummaryCard'
 import { OverdueActionsTable } from './OverdueActionsTable'
+import { ExportGovernanceReportButton } from './ExportGovernanceReportButton'
 import { getExecutiveDashboardData } from '@/lib/reporting/queries'
 import type { AppRole } from '@/types/auth'
 import { MFA_REQUIRED_ROLES } from '@/types/auth'
@@ -100,6 +101,10 @@ export default async function DashboardPage({
     module: getSingleParam(searchParams.module),
   })
 
+  const canExportGovernanceReport = activeRole
+    ? ['admin', 'ceo', 'audit-officer'].includes(activeRole)
+    : false
+
   return (
     <div className="min-h-screen bg-paper">
       {/* Top nav */}
@@ -149,13 +154,14 @@ export default async function DashboardPage({
           <MFAStatusSection mfaEnrolled={mfaEnrolled} />
         )}
 
-        <div className="mb-6">
+        <div className="mb-3 flex items-start justify-between gap-3 flex-wrap">
           <ExecutiveFilterBar
             initialFrom={executiveData.filters.from}
             initialTo={executiveData.filters.to}
             initialDepartment={executiveData.filters.department ?? ''}
             initialModule={executiveData.filters.module}
           />
+          <ExportGovernanceReportButton enabled={canExportGovernanceReport} />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
