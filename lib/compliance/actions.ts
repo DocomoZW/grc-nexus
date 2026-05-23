@@ -1,6 +1,7 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
+import { z } from 'zod'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { computeFileHash } from '@/lib/files/checksum'
@@ -12,6 +13,9 @@ import {
   type AttestationInput,
 } from '@/lib/schemas/compliance'
 import type { AppRole } from '@/types/auth'
+
+// UUID format validator — used to guard obligationId params in server actions (HI-01)
+const uuidSchema = z.string().uuid()
 
 // Roles allowed to create/edit obligations and upload evidence (D-32)
 const WRITE_ROLES: AppRole[] = ['admin', 'compliance-officer']
@@ -123,6 +127,10 @@ export async function updateObligation(
   obligationId: string,
   values: ObligationInput,
 ): Promise<ActionResult> {
+  if (!uuidSchema.safeParse(obligationId).success) {
+    return { error: 'Invalid obligation ID.' }
+  }
+
   const parsed = obligationSchema.safeParse(values)
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? 'Invalid input.' }
@@ -177,6 +185,9 @@ export async function uploadEvidence(formData: FormData): Promise<ActionResult> 
 
     if (!file) return { error: 'No file provided.' }
     if (!obligationId) return { error: 'Obligation ID is required.' }
+    if (!uuidSchema.safeParse(obligationId).success) {
+      return { error: 'Invalid obligation ID.' }
+    }
     if (!clientHash) return { error: 'Checksum is required.' }
 
     // Validate file size (D-14)
@@ -271,6 +282,10 @@ export async function attestObligation(
   obligationId: string,
   values: AttestationInput,
 ): Promise<ActionResult> {
+  if (!uuidSchema.safeParse(obligationId).success) {
+    return { error: 'Invalid obligation ID.' }
+  }
+
   const parsed = attestationSchema.safeParse(values)
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? 'Invalid input.' }
