@@ -51,39 +51,25 @@ vi.mock('@supabase/ssr', () => {
     })),
   })
 
-  const fromImpl = (table: string) => {
-    if (table === 'kpis') {
-      // first call may be the KPI fetch (select), second may be insert
-      return {
+  const buildFromTable = () => ({
+    select: vi.fn(() => ({
+      eq: vi.fn(() => buildSingle()),
+    })),
+    insert: vi.fn(() => ({
+      select: vi.fn(() => ({
+        single: vi.fn(() => ({ data: mockDbData, error: mockDbError })),
+      })),
+    })),
+    update: vi.fn(() => ({
+      eq: vi.fn(() => ({
         select: vi.fn(() => ({
-          eq: vi.fn(() => buildSingle()),
-        })),
-        insert: vi.fn(() => ({
-          select: vi.fn(() => ({
-            single: vi.fn(() => ({ data: mockDbData, error: mockDbError })),
-          })),
-        })),
-      }
-    }
-    return {
-      insert: vi.fn(() => ({
-        select: vi.fn(() => ({
-          single: vi.fn(() => {
-            return { data: mockDbData, error: mockDbError }
-          }),
+          single: vi.fn(() => ({ data: mockDbData, error: mockDbError })),
         })),
       })),
-      update: vi.fn(() => ({
-        eq: vi.fn(() => ({
-          select: vi.fn(() => ({
-            single: vi.fn(() => {
-              return { data: mockDbData, error: mockDbError }
-            }),
-          })),
-        })),
-      })),
-    }
-  }
+    })),
+  })
+
+  const fromImpl = (_table: string) => buildFromTable()
 
   return {
     createServerClient: vi.fn(() => ({
@@ -125,7 +111,7 @@ const makeUser = (role: string, id = 'user-uuid-1', institutionId = 'inst-uuid-1
 const validObjective = {
   title: 'Improve public service delivery',
   description: 'Digitize 80% of citizen services',
-  owner_id: 'owner-uuid-1',
+  owner_id: '00000000-0000-0000-0000-000000000001',
   status: 'active' as const,
   nds2_pillar: 'governance_and_institutions' as const,
   institutional_goal: undefined,
@@ -134,10 +120,10 @@ const validObjective = {
 }
 
 const validKpi = {
-  objective_id: 'obj-uuid-1',
+  objective_id: '00000000-0000-0000-0000-000000000002',
   title: 'Service digitization rate',
   description: 'Percentage of services digitized',
-  owner_id: 'owner-uuid-1',
+  owner_id: '00000000-0000-0000-0000-000000000001',
   baseline_value: 10,
   target_value: 80,
   unit_of_measure: '%',
