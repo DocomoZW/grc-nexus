@@ -49,12 +49,12 @@ Date: 2026-05-22
 
 ### Board Management & Corporate Governance
 
-- [ ] **BOARD-01**: Admin can create a board meeting with date, agenda items, and attendees
-- [ ] **BOARD-02**: Users can upload and attach board pack documents to a meeting
-- [ ] **BOARD-03**: Board members can record resolutions (motion text, proposer, seconder, vote outcome) per meeting
-- [ ] **BOARD-04**: System tracks board action items from resolutions with owner, due date, and status
-- [ ] **BOARD-05**: Overdue board actions trigger escalation notifications to the action owner
-- [ ] **BOARD-06**: Board meeting records are immutable after closure (no edits, only amendments as new entries)
+- [x] **BOARD-01**: Admin can create a board meeting with date, agenda items, and attendees
+- [x] **BOARD-02**: Users can upload and attach board pack documents to a meeting
+- [x] **BOARD-03**: Board members can record resolutions (motion text, proposer, seconder, vote outcome) per meeting
+- [x] **BOARD-04**: System tracks board action items from resolutions with owner, due date, and status
+- [x] **BOARD-05**: Overdue board actions trigger escalation notifications to the action owner
+- [x] **BOARD-06**: Board meeting records are immutable after closure (no edits, only amendments as new entries)
 
 ### Internal Audit & Findings
 
@@ -149,12 +149,12 @@ Date: 2026-05-22
 | COMP-04 | Compliance & Policy Management | Phase 4 | Pending |
 | COMP-05 | Compliance & Policy Management | Phase 4 | Pending |
 | COMP-06 | Compliance & Policy Management | Phase 4 | Pending |
-| BOARD-01 | Board Management & Corporate Governance | Phase 5 | Pending |
-| BOARD-02 | Board Management & Corporate Governance | Phase 5 | Pending |
-| BOARD-03 | Board Management & Corporate Governance | Phase 5 | Pending |
-| BOARD-04 | Board Management & Corporate Governance | Phase 5 | Pending |
-| BOARD-05 | Board Management & Corporate Governance | Phase 5 | Pending |
-| BOARD-06 | Board Management & Corporate Governance | Phase 5 | Pending |
+| BOARD-01 | Board Management & Corporate Governance | Phase 5 | Complete |
+| BOARD-02 | Board Management & Corporate Governance | Phase 5 | Complete |
+| BOARD-03 | Board Management & Corporate Governance | Phase 5 | Complete |
+| BOARD-04 | Board Management & Corporate Governance | Phase 5 | Complete |
+| BOARD-05 | Board Management & Corporate Governance | Phase 5 | Complete |
+| BOARD-06 | Board Management & Corporate Governance | Phase 5 | Complete |
 | AUDIT-01 | Internal Audit & Findings | Phase 6 | Pending |
 | AUDIT-02 | Internal Audit & Findings | Phase 6 | Pending |
 | AUDIT-03 | Internal Audit & Findings | Phase 6 | Pending |

@@ -162,6 +162,8 @@ Plans:
 
 **Requirements:** BOARD-01, BOARD-02, BOARD-03, BOARD-04, BOARD-05, BOARD-06
 
+**Status:** Complete (2026-05-23)
+
 **Success Criteria:**
 
 1. Admin can create a board meeting with date, agenda items list, and attendee roster; meeting state transitions from Scheduled â”œÃ³Î“Ã‡Ã¡Î“Ã‡Ã– In Progress â”œÃ³Î“Ã‡Ã¡Î“Ã‡Ã– Closed
@@ -178,7 +180,7 @@ Plans:
 
 **UI hint**: yes
 
-**Plans:** 6 plans
+**Plans:** 6/6 plans complete
 
 Plans:
 - [x] 05-01-PLAN.md — Database migrations (role extension + schema + RLS + triggers) + types + Zod schemas + board-utils + supabase db push
@@ -336,17 +338,17 @@ Plans:
 
 | COMP-06 | Compliance & Policy Management | Phase 4 | Pending |
 
-| BOARD-01 | Board Management & Corporate Governance | Phase 5 | Pending |
+| BOARD-01 | Board Management & Corporate Governance | Phase 5 | Complete |
 
-| BOARD-02 | Board Management & Corporate Governance | Phase 5 | Pending |
+| BOARD-02 | Board Management & Corporate Governance | Phase 5 | Complete |
 
-| BOARD-03 | Board Management & Corporate Governance | Phase 5 | Pending |
+| BOARD-03 | Board Management & Corporate Governance | Phase 5 | Complete |
 
-| BOARD-04 | Board Management & Corporate Governance | Phase 5 | Pending |
+| BOARD-04 | Board Management & Corporate Governance | Phase 5 | Complete |
 
-| BOARD-05 | Board Management & Corporate Governance | Phase 5 | Pending |
+| BOARD-05 | Board Management & Corporate Governance | Phase 5 | Complete |
 
-| BOARD-06 | Board Management & Corporate Governance | Phase 5 | Pending |
+| BOARD-06 | Board Management & Corporate Governance | Phase 5 | Complete |
 
 | AUDIT-01 | Internal Audit & Findings | Phase 6 | Pending |
 
