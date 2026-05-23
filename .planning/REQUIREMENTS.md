@@ -58,11 +58,11 @@ Date: 2026-05-22
 
 ### Internal Audit & Findings
 
-- [ ] **AUDIT-01**: Audit officers can create audit findings linked to a control, risk, or compliance obligation
-- [ ] **AUDIT-02**: Each finding has a severity (Minor, Moderate, Major, Critical), root cause, and remediation owner
-- [ ] **AUDIT-03**: Remediation owners can update finding status (Open, In Progress, Closed) and upload evidence of closure
-- [ ] **AUDIT-04**: Dashboard shows audit finding summary: open count by severity, overdue remediations
-- [ ] **AUDIT-05**: Overdue audit remediations trigger escalation to the finding owner and audit officer
+- [x] **AUDIT-01**: Audit officers can create audit findings linked to a control, risk, or compliance obligation
+- [x] **AUDIT-02**: Each finding has a severity (Minor, Moderate, Major, Critical), root cause, and remediation owner
+- [x] **AUDIT-03**: Remediation owners can update finding status (Open, In Progress, Closed) and upload evidence of closure
+- [x] **AUDIT-04**: Dashboard shows audit finding summary: open count by severity, overdue remediations
+- [x] **AUDIT-05**: Overdue audit remediations trigger escalation to the finding owner and audit officer
 
 ### Incident & Whistleblower Management
 

@@ -165,13 +165,23 @@ Plans:
 
 5. Overdue board action items trigger escalation notifications to action owner and board secretary
 
-6. After board meeting is closed, all records (agenda, pack, resolutions, action items) become immutable; amendments to closed meetings are recorded as new audit entries only
+  6. After board meeting is closed, all records (agenda, pack, resolutions, action items) become immutable; amendments to closed meetings are recorded as new audit entries only
 
 **UI hint**: yes
 
+**Plans:** 6 plans
+
+Plans:
+- [x] 05-01-PLAN.md — Database migrations (role extension + schema + RLS + triggers) + types + Zod schemas + board-utils + supabase db push
+- [x] 05-02-PLAN.md — Server Actions + queries + escalation service + /api/board/escalate route
+- [x] 05-03-PLAN.md — Board pack document download Route Handler with SHA-256 verification
+- [x] 05-04-PLAN.md — Board dashboard (stats + upcoming meetings + overdue actions) reusing ComplianceStatCard
+- [x] 05-05-PLAN.md — Meetings list + create/edit + detail tabs (Agenda/Documents/Resolutions/Actions) + all forms + upload + resolution + actions
+- [x] 05-06-PLAN.md — Board nav integration (Gavel) + role badge updates + full human verification checkpoint
 
 
 ---
+
 
 
 
@@ -186,14 +196,14 @@ Plans:
 4. Dashboard displays audit finding summary: count of open findings by severity tier and count of overdue remediations requiring action
 5. Overdue audit remediations trigger escalation notifications to remediation owner and audit officer
 **UI hint**: yes
-**Plans:** 5 plans
+**Plans:** 5/5 plans complete
 
 Plans:
-- [ ] 06-01-PLAN.md â€” Audit schema/RLS/trigger migrations + audit types + validation schemas + utility contracts
-- [ ] 06-02-PLAN.md â€” Server Actions + query helpers + escalation service + protected /api/audit/escalate route
-- [ ] 06-03-PLAN.md â€” Audit dashboard + findings list table + new finding form workflow
-- [ ] 06-04-PLAN.md â€” Finding detail + status update flow + remediation evidence upload UX
-- [ ] 06-05-PLAN.md â€” Audit nav integration + end-to-end human verification checkpoint
+- [x] 06-01-PLAN.md â€” Audit schema/RLS/trigger migrations + audit types + validation schemas + utility contracts
+- [x] 06-02-PLAN.md â€” Server Actions + query helpers + escalation service + protected /api/audit/escalate route
+- [x] 06-03-PLAN.md â€” Audit dashboard + findings list table + new finding form workflow
+- [x] 06-04-PLAN.md â€” Finding detail + status update flow + remediation evidence upload UX
+- [x] 06-05-PLAN.md â€” Audit nav integration + end-to-end human verification checkpoint
 
 ---
 
@@ -393,7 +403,7 @@ Plans:
 
 | 5 | Board Management | 6 | Not Started | â”œÃ³Î“Ã©Â¼Î“Ã‡Â¥ |
 
-| 6 | Internal Audit | 5 | Planned (5 plans) | — |
+| 6 | Internal Audit | 5/5 | Complete   | 2026-05-23 |
 
 | 7 | Incident & Whistleblower | 5 | Not Started | â”œÃ³Î“Ã©Â¼Î“Ã‡Â¥ |
 
