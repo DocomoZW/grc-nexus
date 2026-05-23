@@ -236,6 +236,16 @@ export async function uploadEvidence(formData: FormData): Promise<ActionResult> 
       .upload(storagePath, file, { upsert: false })
 
     if (uploadError) {
+      // Distinguish duplicate-file error (TOCTOU race where two concurrent uploads both
+      // passed the list() check) from other storage errors (HI-03).
+      // Supabase Storage returns "The resource already exists" or statusCode 23505/409
+      // when upsert:false rejects a duplicate path.
+      const isDuplicate =
+        uploadError.message?.toLowerCase().includes('already exists') ||
+        (uploadError as unknown as { statusCode?: string }).statusCode === '23505'
+      if (isDuplicate) {
+        return { error: 'Evidence file already exists; upload a new version.' }
+      }
       console.error('[uploadEvidence] Storage upload error:', uploadError)
       return { error: 'Unable to upload evidence. Check your connection and try again.' }
     }
