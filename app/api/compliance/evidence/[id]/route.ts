@@ -78,10 +78,13 @@ export async function GET(
   }
 
   // Step 6: Stream verified file as attachment (D-31)
+  // RFC 5987 percent-encoding prevents HTTP header injection via filenames containing
+  // double-quotes, backslashes, or CRLF sequences (CR-01)
+  const encodedFilename = encodeURIComponent(evidence.original_filename)
   return new Response(bytes, {
     headers: {
       'Content-Type': evidence.mime_type,
-      'Content-Disposition': `attachment; filename="${evidence.original_filename}"`,
+      'Content-Disposition': `attachment; filename*=UTF-8''${encodedFilename}`,
       'Cache-Control': 'no-store, no-cache, must-revalidate',
     },
   })
