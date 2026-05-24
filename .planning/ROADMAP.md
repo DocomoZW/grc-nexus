@@ -432,6 +432,209 @@ Plans:
 
 *Phase 6 planned: 2026-05-23*
 
+*Phases 9–14 added: 2026-05-25 — Enterprise Audit Enhancement (v2.0 bridge plan)*
+
+
+
+---
+
+
+
+### Phase 9: KRI/KCI Framework and Threshold Alerts
+
+**Goal:** Governance officers can define Key Risk Indicators and Key Control Indicators, record period readings, and receive automated value-threshold alerts when KPIs, KRIs, or KCIs breach configured tolerance levels.
+
+**Depends on:** Phase 2 (KPI patterns), Phase 3 (risks and controls)
+
+**Requirements:** BRIDGE-KRI-01, BRIDGE-KRI-02, BRIDGE-KRI-03, BRIDGE-KCI-01, BRIDGE-KCI-02, BRIDGE-KCI-03, BRIDGE-ALERT-01, BRIDGE-ALERT-02
+
+**Success Criteria:**
+
+1. Risk officer can define a KRI linked to a risk with metric name, unit, target value, alert threshold, direction (increasing = worse / decreasing = worse), and owner
+
+2. Risk officer can record KRI period readings (period start/end, actual value, status, notes) without overwriting prior readings
+
+3. Audit officer can define a KCI linked to a control with metric name, unit, target value, alert threshold, and test cadence
+
+4. Audit officer can record KCI readings (period, actual value, status, evidence reference) per scheduled test cycle
+
+5. System automatically fires threshold-breach email alerts (via Resend) to the KRI/KCI owner and governance officer when actual value crosses the configured alert threshold
+
+6. Executive dashboard displays a KRI status tile (count by status: on-track / at-risk / breached) and a KCI health grid (% of controls green)
+
+7. KRI and KCI readings are immutably recorded via Postgres audit triggers consistent with existing audit trail
+
+**UI hint**: yes
+
+**Plans:** 5 plans
+
+Plans:
+- [ ] 09-01-PLAN.md — KRI/KCI migrations (schema + RLS + triggers for 4 tables) + supabase db push
+- [ ] 09-02-PLAN.md — Types + Zod schemas + utils + server actions + queries + alert services + cron API routes
+- [ ] 09-03-PLAN.md — KRI UI (list /risk/kris, create form, detail page, reading form) + shared IndicatorSparkline/IndicatorStatusBadge
+- [ ] 09-04-PLAN.md — KCI UI (list /audit/kcis, create form, detail page, reading form)
+- [ ] 09-05-PLAN.md — Dashboard KRI/KCI tiles + risk/audit page integration + sidebar nav + verification checkpoint
+
+
+
+---
+
+
+
+### Phase 10: Audit Universe, Programs, and Continuous Control Testing
+
+**Goal:** Audit officers can maintain a risk-based audit plan with structured audit engagements, test procedures, and automated control test scheduling that generates findings when controls fail.
+
+**Depends on:** Phase 6 (audit findings patterns), Phase 4 (compliance obligation patterns)
+
+**Requirements:** BRIDGE-AUD-01, BRIDGE-AUD-02, BRIDGE-AUD-03, BRIDGE-AUD-04, BRIDGE-AUD-05, BRIDGE-AUD-06
+
+**Success Criteria:**
+
+1. Audit officer can create an annual audit plan with title, coverage period, and status (draft / active / closed)
+
+2. Audit officer can create audit engagements under a plan with scope description, risk basis, lead auditor, planned start/end dates, and status
+
+3. Audit officer can define test procedures under an engagement with title, objective, test type (interview / observation / reperformance / analytical), and frequency
+
+4. System maintains a control test schedule — for each control flagged for continuous testing, a cron job fires daily and creates a finding automatically when the control has no recent evidence within its test cadence window
+
+5. Audit officer can create workpapers linked to an engagement and a test procedure with structured reference, content notes, reviewer, and status (draft / reviewed / approved)
+
+6. Governance report PDF includes a combined assurance summary section showing audit findings, risk treatment status, and compliance obligations with overlapping root causes
+
+7. Admin can configure automated governance report dispatch on a schedule (weekly / monthly / quarterly) with recipient email list; report is generated and emailed without manual trigger
+
+**UI hint**: yes
+
+**Plans:** TBD
+
+
+
+---
+
+
+
+### Phase 11: Real-Time Dashboard, Cross-Module Graph, and Notification Centre
+
+**Goal:** Executive dashboard auto-updates in real time without page refresh; a cross-module traceability graph visualises the Objective → KPI → Risk → Control → Finding chain; an in-app notification bell surfaces all governance alerts.
+
+**Depends on:** Phase 8 (dashboard patterns), Phase 9 (KRI/KCI data), Phase 10 (audit data)
+
+**Requirements:** BRIDGE-RT-01, BRIDGE-RT-02, BRIDGE-RT-03, BRIDGE-RT-04, BRIDGE-NOTIF-01, BRIDGE-NOTIF-02
+
+**Success Criteria:**
+
+1. Executive dashboard risk heatmap, compliance posture card, and overdue actions table update automatically (no page reload) within 5 seconds of a relevant data change
+
+2. Real-time updates are scoped to the authenticated user's institution_id — cross-institution data cannot flow through Supabase Realtime channels
+
+3. A traceability graph panel on the executive dashboard renders a Nivo network graph connecting Strategic Objectives → KPIs → Risks → Controls → Audit Findings using FK relationships; clicking a node navigates to its detail page
+
+4. A notification bell icon in the protected layout header shows an unread badge count; clicking opens a dropdown listing the 10 most recent governance alerts (escalation emails, threshold breaches, overdue items) with links to source records
+
+5. Notification records are stored in a `notifications` table (user_id, title, body, link, source_module, read_at) and are inserted automatically whenever the existing escalation services fire Resend emails
+
+6. Users can mark individual notifications read or mark all read; unread count badge updates without page reload
+
+**UI hint**: yes
+
+**Plans:** TBD
+
+
+
+---
+
+
+
+### Phase 12: ESG Metrics and Reporting Module
+
+**Goal:** Governance officers can collect Environmental, Social, and Governance metrics against GRI/SASB/TCFD frameworks, track targets, and generate stakeholder-facing ESG disclosure reports.
+
+**Depends on:** Phase 1 (auth, institutional context), Phase 4 (evidence upload patterns)
+
+**Requirements:** BRIDGE-ESG-01, BRIDGE-ESG-02, BRIDGE-ESG-03, BRIDGE-ESG-04, BRIDGE-ESG-05, BRIDGE-ESG-06
+
+**Success Criteria:**
+
+1. System includes a seeded reference table of ESG frameworks (GRI Standards, SASB, TCFD) with associated metric codes and descriptions
+
+2. ESG Officer can create institution-specific ESG metric definitions (metric name, code, category: Environmental / Social / Governance, unit, target value, framework reference)
+
+3. ESG Officer can record metric readings per period (actual value, notes, evidence upload) without overwriting historical records
+
+4. Dashboard displays an ESG posture panel: Environmental metrics trend chart, Social metrics summary card, Governance score composite, and a materiality matrix scatter plot (Nivo scatter: stakeholder significance vs. business significance)
+
+5. System can generate a GRI-indexed ESG disclosure report as a PDF (via existing Puppeteer setup) covering all framework metrics with actual vs. target values, period-over-period trend, and evidence references
+
+6. ESG readings and metric definitions are protected by RLS (institution-scoped) and recorded in the immutable audit trail
+
+**UI hint**: yes
+
+**Plans:** TBD
+
+
+
+---
+
+
+
+### Phase 13: ISO 9001:2015 Quality Management System Module
+
+**Goal:** Governance officers can manage QMS controlled documents, track quality objectives, log non-conformances with corrective action plans, and record management reviews per ISO 9001:2015 requirements.
+
+**Depends on:** Phase 1 (auth, audit trail), Phase 4 (evidence upload patterns)
+
+**Requirements:** BRIDGE-QMS-01, BRIDGE-QMS-02, BRIDGE-QMS-03, BRIDGE-QMS-04, BRIDGE-QMS-05
+
+**Success Criteria:**
+
+1. Admin can create QMS documents (document number, title, type: policy / procedure / work-instruction / form / record, version, status: draft / active / superseded / obsolete, effective date, review date, owner) with version increment on each update
+
+2. System automatically alerts document owner 30 days before review date is reached (mirrors compliance obligation escalation pattern)
+
+3. Quality officer can log non-conformances (NC number auto-generated, description, source: internal-audit / customer / supplier / process, root cause, corrective action plan, target closure date, status: open / in-progress / closed / verified)
+
+4. Quality officer can record management review meetings with mandatory input sections (audit results, customer feedback, process performance, corrective action status) and output action items assigned to owners with due dates
+
+5. Dashboard displays a QMS posture tile: count of active documents pending review, open non-conformances by source, and overdue corrective actions
+
+**UI hint**: yes
+
+**Plans:** TBD
+
+
+
+---
+
+
+
+### Phase 14: Advanced Analytics — Forecasting, Anomaly Detection, and Data Export
+
+**Goal:** The platform surfaces predictive KPI/KRI forecasts, anomaly detection alerts, and provides analytics-grade structured data export — without requiring an external Python/R runtime for the initial delivery.
+
+**Depends on:** Phase 9 (KRI/KCI readings), Phase 2 (KPI readings data)
+
+**Requirements:** BRIDGE-ANA-01, BRIDGE-ANA-02, BRIDGE-ANA-03, BRIDGE-ANA-04
+
+**Success Criteria:**
+
+1. KPI and KRI detail pages display a simple linear regression forecast band for the next 2 periods based on the last 4–6 readings, rendered as a Recharts ReferenceLine range above the trend sparkline
+
+2. A background cron job runs daily and detects KPI/KRI readings that deviate more than 2 standard deviations from the trailing 6-period mean; detected anomalies insert notification records and send Resend email alerts to the metric owner
+
+3. Admin can download a structured CSV export for each module (risks, KPIs, KRIs, KCIs, obligations, findings, incidents, board actions, ESG metrics) from a new Analytics Export admin page; exports are institution-scoped via RLS
+
+4. The Analytics Export page documents the available endpoints and data schemas so that external R or Python workflows can consume the exports (no runtime integration required in this phase — documentation and clean export format is the deliverable)
+
+**UI hint**: yes
+
+**Plans:** TBD
+
+
+
+---
+
 
 
 
