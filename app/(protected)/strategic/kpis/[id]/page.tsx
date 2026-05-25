@@ -12,6 +12,8 @@ import { getLatestReading } from '@/lib/strategic/queries'
 import { KPI_FREQUENCY_LABELS } from '@/types/strategic'
 import type { AppRole, AppMetadata } from '@/types/auth'
 import type { KpiFrequency } from '@/types/strategic'
+import { forecastPoints } from '@/lib/analytics/forecast'
+import { ForecastChart } from '@/components/analytics/ForecastChart'
 
 export const dynamic = 'force-dynamic'
 
@@ -71,6 +73,33 @@ export default async function KpiDetailPage({ params }: PageProps) {
   const latest = getLatestReading(kpiReadings)
   const status = calculateKpiStatus(latest?.actual_value ?? null, kpiRow.target_value)
   const badge = KPI_STATUS_BADGE[status]
+
+  const KPI_STATUS_COLOR: Record<typeof status, string> = {
+    on_track: '#27AE60',
+    at_risk:  '#E67E22',
+    off_track: '#E74C3C',
+    no_data:  '#D7E2EF',
+  }
+  const statusColor = KPI_STATUS_COLOR[status]
+
+  // Forecast computation — only when >= 4 readings (per D-locked CONTEXT.md decision)
+  let forecastData: { lower: number; upper: number }[] | null = null
+  if (kpiReadings.length >= 4) {
+    const chronological = [...kpiReadings]
+      .sort((a, b) => a.recorded_at.localeCompare(b.recorded_at))
+      .map(r => r.actual_value)
+    forecastData = forecastPoints(chronological, 2)
+  }
+
+  const chartData: { period: string; value: number | null }[] = forecastData
+    ? [
+        ...[...kpiReadings]
+          .sort((a, b) => a.recorded_at.localeCompare(b.recorded_at))
+          .map(r => ({ period: r.reporting_period, value: r.actual_value })),
+        { period: 'Forecast P1', value: null },
+        { period: 'Forecast P2', value: null },
+      ]
+    : []
 
   // Role gate for Record Reading link (D-13)
   const canRecord = activeRole === 'admin' || user.id === kpiRow.owner_id
@@ -200,6 +229,21 @@ export default async function KpiDetailPage({ params }: PageProps) {
           </div>
         )}
       </div>
+
+      {/* Forecast Analytics — renders only when >= 4 readings exist (per D-locked CONTEXT.md decision) */}
+      {forecastData && forecastData.length === 2 && (
+        <div>
+          <h2 className="text-[16px] font-semibold text-navy-900 mb-4">Forecast (next 2 periods)</h2>
+          <div className="bg-white rounded-[10px] border border-paper-border shadow-card p-6">
+            <ForecastChart
+              data={chartData}
+              forecastBand={{ lower: forecastData[0].lower, upper: forecastData[1].upper }}
+              targetValue={kpiRow.target_value}
+              statusColor={statusColor}
+            />
+          </div>
+        </div>
+      )}
     </div>
   )
 }
