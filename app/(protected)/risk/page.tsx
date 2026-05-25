@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import type { AppRole } from '@/types/auth'
 import { listRisks, listRiskHeatmapPoints } from '@/lib/risk/queries'
 import { calculateRiskScore, getRiskSeverity, isTreatmentOverdue } from '@/lib/risk/risk-utils'
+import { getKriDashboardStats } from '@/lib/risk/kri-queries'
 import { RiskHeatmap } from './RiskHeatmap'
 import type { RiskStatus, TreatmentStatus } from '@/types/risk'
 
@@ -45,9 +46,10 @@ export default async function RiskOverviewPage() {
     redirect('/dashboard')
   }
 
-  const [risksResult, heatmapResult] = await Promise.all([
+  const [risksResult, heatmapResult, kriStats] = await Promise.all([
     listRisks(supabase),
     listRiskHeatmapPoints(supabase),
+    getKriDashboardStats(supabase),
   ])
 
   const rows = risksResult.data as unknown as RiskOverviewRow[]
@@ -104,6 +106,34 @@ export default async function RiskOverviewPage() {
           <Link href="/risk/new" className="rounded-[8px] border border-paper-border px-4 py-2 text-[13px] text-navy-900 hover:bg-paper">
             Create Risk
           </Link>
+        </div>
+      </div>
+
+      {/* KRI summary */}
+      <div className="mt-4 rounded-[10px] border border-paper-border bg-white p-6 shadow-card">
+        <div className="mb-3 flex items-center justify-between">
+          <h2 className="text-[16px] font-semibold text-navy-900">Key Risk Indicators</h2>
+          <Link href="/risk/kris" className="text-[13px] text-navy-mid hover:text-navy-900 hover:underline">
+            View all KRIs →
+          </Link>
+        </div>
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+          <div className="rounded-[8px] border border-paper-border bg-paper p-3">
+            <p className="text-[12px] uppercase tracking-wider text-navy-mid">On Track</p>
+            <p className="mt-1 font-mono text-[24px] font-semibold text-ok">{kriStats.on_track}</p>
+          </div>
+          <div className="rounded-[8px] border border-paper-border bg-paper p-3">
+            <p className="text-[12px] uppercase tracking-wider text-navy-mid">At Risk</p>
+            <p className="mt-1 font-mono text-[24px] font-semibold text-warn">{kriStats.at_risk}</p>
+          </div>
+          <div className="rounded-[8px] border border-paper-border bg-paper p-3">
+            <p className="text-[12px] uppercase tracking-wider text-navy-mid">Breached</p>
+            <p className={`mt-1 font-mono text-[24px] font-semibold ${kriStats.breached > 0 ? 'text-err' : 'text-navy-900'}`}>{kriStats.breached}</p>
+          </div>
+          <div className="rounded-[8px] border border-paper-border bg-paper p-3">
+            <p className="text-[12px] uppercase tracking-wider text-navy-mid">No Data</p>
+            <p className="mt-1 font-mono text-[24px] font-semibold text-navy-mid">{kriStats.no_data}</p>
+          </div>
         </div>
       </div>
     </div>

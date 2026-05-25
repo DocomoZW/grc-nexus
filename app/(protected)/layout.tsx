@@ -5,6 +5,8 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { SidebarLayout } from '@/components/layout/SidebarLayout'
+import { NotificationBell } from '@/components/notifications/NotificationBell'
+import type { Notification } from '@/types/notifications'
 
 export const dynamic = 'force-dynamic'
 
@@ -33,8 +35,23 @@ export default async function ProtectedLayout({ children }: { children: React.Re
 
   const activeRole = appMeta?.active_role ?? ''
 
+  // Fetch 10 most recent notifications for the bell (graceful — empty on error)
+  const { data: notifData } = await supabase
+    .from('notifications')
+    .select('id, institution_id, user_id, title, body, link, source_module, read_at, created_at')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: false })
+    .limit(10)
+
+  const notifications = (notifData ?? []) as unknown as Notification[]
+
   return (
-    <SidebarLayout activeRole={activeRole}>
+    <SidebarLayout
+      activeRole={activeRole}
+      notificationBell={
+        <NotificationBell initialNotifications={notifications} userId={user.id} />
+      }
+    >
       {children}
     </SidebarLayout>
   )

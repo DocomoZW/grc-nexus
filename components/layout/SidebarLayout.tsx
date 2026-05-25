@@ -13,6 +13,9 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
+  TrendingUp,
+  BarChart3,
+  FileCheck,
 } from 'lucide-react'
 import { ThemeToggle } from '@/components/theme/ThemeToggle'
 
@@ -29,6 +32,12 @@ const ALL_NAV_ITEMS: NavItem[] = [
   { href: '/strategic/objectives', label: 'Strategic', icon: Target },
   { href: '/risk', label: 'Risk', icon: ShieldAlert },
   {
+    href: '/risk/kris',
+    label: 'KRIs',
+    icon: TrendingUp,
+    roles: ['admin', 'ceo', 'risk-officer', 'audit-officer', 'board-member', 'dept-head'],
+  },
+  {
     href: '/compliance',
     label: 'Compliance',
     icon: ClipboardList,
@@ -39,6 +48,18 @@ const ALL_NAV_ITEMS: NavItem[] = [
     label: 'Audit',
     icon: ShieldCheck,
     excludeRoles: ['board-member'],
+  },
+  {
+    href: '/audit/kcis',
+    label: 'KCIs',
+    icon: TrendingUp,
+    roles: ['admin', 'ceo', 'risk-officer', 'audit-officer', 'board-member'],
+  },
+  {
+    href: '/audit/plans',
+    label: 'Audit Plans',
+    icon: ClipboardList,
+    roles: ['admin', 'ceo', 'audit-officer', 'risk-officer', 'compliance-officer', 'board-member', 'dept-head'],
   },
   {
     href: '/board',
@@ -52,15 +73,28 @@ const ALL_NAV_ITEMS: NavItem[] = [
     icon: AlertTriangle,
     excludeRoles: ['board-member'],
   },
+  {
+    href: '/esg',
+    label: 'ESG',
+    icon: BarChart3,
+    excludeRoles: ['dept-head'],
+  },
+  {
+    href: '/qms',
+    label: 'QMS',
+    icon: FileCheck,
+    excludeRoles: ['dept-head'],
+  },
   { href: '/admin/users', label: 'Admin', icon: Settings, roles: ['admin'] },
 ]
 
 interface SidebarLayoutProps {
   activeRole: string
   children: React.ReactNode
+  notificationBell?: React.ReactNode
 }
 
-export function SidebarLayout({ activeRole, children }: SidebarLayoutProps) {
+export function SidebarLayout({ activeRole, children, notificationBell }: SidebarLayoutProps) {
   const [collapsed, setCollapsed] = useState(false)
 
   const visibleItems = ALL_NAV_ITEMS.filter((item) => {
@@ -126,10 +160,16 @@ export function SidebarLayout({ activeRole, children }: SidebarLayoutProps) {
 
       {/* Main content — offset by sidebar width */}
       <main
-        className={`max-w-[1200px] px-8 pt-8 transition-all duration-300 ${
+        className={`max-w-[1200px] px-8 pt-8 pb-12 transition-all duration-300 ${
           collapsed ? 'ml-16' : 'ml-[220px]'
         }`}
       >
+        {/* Top-right header bar */}
+        {notificationBell && (
+          <div className="flex justify-end mb-4">
+            {notificationBell}
+          </div>
+        )}
         {children}
       </main>
     </div>

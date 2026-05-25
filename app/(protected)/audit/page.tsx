@@ -4,6 +4,7 @@ import { AlertCircle, ClipboardList, Flame, ShieldCheck } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import type { AppRole } from '@/types/auth'
 import { getAuditDashboardStats, listAuditFindings } from '@/lib/audit/queries'
+import { getKciDashboardStats } from '@/lib/audit/kci-queries'
 import { AuditStatCard } from '@/components/audit/AuditStatCard'
 import { AUDIT_FINDING_STATUS_BADGE } from '@/lib/audit/audit-utils'
 import { AUDIT_FINDING_SEVERITY_LABELS, AUDIT_FINDING_STATUS_LABELS, type AuditFindingSeverity, type AuditFindingStatus } from '@/types/audit'
@@ -43,9 +44,10 @@ export default async function AuditDashboardPage() {
     redirect('/dashboard')
   }
 
-  const [stats, findingsResult] = await Promise.all([
+  const [stats, findingsResult, kciStats] = await Promise.all([
     getAuditDashboardStats(supabase),
     listAuditFindings(supabase),
+    getKciDashboardStats(supabase),
   ])
 
   const preview = (findingsResult.data as unknown as PreviewRow[])
@@ -169,6 +171,32 @@ export default async function AuditDashboardPage() {
             </table>
           </div>
         )}
+      </div>
+
+      {/* KCI health summary */}
+      <div className="mt-4 rounded-[10px] border border-paper-border bg-white p-6 shadow-card">
+        <div className="mb-3 flex items-center justify-between">
+          <h2 className="text-[16px] font-semibold text-navy-900">Key Control Indicators</h2>
+          <Link href="/audit/kcis" className="text-[13px] text-navy-mid hover:text-navy-900 hover:underline">
+            View all KCIs →
+          </Link>
+        </div>
+        <div className="grid grid-cols-3 gap-3">
+          <div className="rounded-[8px] border border-paper-border bg-paper p-3">
+            <p className="text-[12px] uppercase tracking-wider text-navy-mid">Total</p>
+            <p className="mt-1 font-mono text-[24px] font-semibold text-navy-900">{kciStats.total}</p>
+          </div>
+          <div className="rounded-[8px] border border-paper-border bg-paper p-3">
+            <p className="text-[12px] uppercase tracking-wider text-navy-mid">On Track</p>
+            <p className="mt-1 font-mono text-[24px] font-semibold text-ok">{kciStats.on_track}</p>
+          </div>
+          <div className="rounded-[8px] border border-paper-border bg-paper p-3">
+            <p className="text-[12px] uppercase tracking-wider text-navy-mid">Control Health</p>
+            <p className={`mt-1 font-mono text-[24px] font-semibold ${kciStats.pct_on_track >= 80 ? 'text-ok' : kciStats.pct_on_track >= 60 ? 'text-warn' : 'text-err'}`}>
+              {kciStats.pct_on_track}%
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   )
