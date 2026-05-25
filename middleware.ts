@@ -41,6 +41,11 @@ export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname
   const isPublicRoute = PUBLIC_ROUTES.some(r => path.startsWith(r))
 
+  // API routes handle their own auth (401/403) — never redirect them to /login
+  if (path.startsWith('/api/')) {
+    return response
+  }
+
   // 1. Unauthenticated: redirect to login (except public routes)
   if (!user && !isPublicRoute) {
     const loginUrl = new URL('/login', request.url)
