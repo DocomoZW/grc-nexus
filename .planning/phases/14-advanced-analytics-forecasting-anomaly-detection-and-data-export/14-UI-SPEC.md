@@ -1,10 +1,11 @@
 ---
 phase: 14
 slug: advanced-analytics-forecasting-anomaly-detection-and-data-export
-status: draft
+status: approved
 shadcn_initialized: true
 preset: "style=default, baseColor=slate, cssVariables=true, iconLibrary=lucide"
 created: 2026-05-25
+reviewed_at: 2026-05-25
 ---
 
 # Phase 14 — UI Design Contract
@@ -73,7 +74,7 @@ Taken from existing codebase patterns. All sizes in px, declared inline via Tail
 | Label / meta / table header | 13px | 600 (semibold) uppercase tracking-wider | 1.4 | DM Sans (font-body) | kpis/[id]/page.tsx |
 
 Additional fixed uses in this phase:
-- Badge text: 12px, weight 500 (medium) — matches existing Badge component pattern
+- Badge text: 13px, weight 600 (semibold) — matches label/meta scale entry
 - Monospaced values (actual values, periods, export column names): 13px DM Mono — matches `font-mono` pattern
 - Accordion trigger text (API docs section): 14px, weight 600 — uses shadcn Accordion default
 
@@ -233,14 +234,14 @@ Uses shadcn Accordion component (new install required).
       GET /api/analytics/export/kpis
     </AccordionTrigger>
     <AccordionContent className="px-6 pb-4">
-      ...column definitions in <pre> block using font-mono text-[12px]...
+      ...column definitions in <pre> block using font-mono text-[13px]...
     </AccordionContent>
   </AccordionItem>
 </Accordion>
 ```
 
 Accordion trigger typography: 14px, font-semibold, `text-navy-900`
-Accordion content: 13px body DM Sans, monospace column names in `<code className="font-mono text-[12px] bg-paper px-1 rounded">`
+Accordion content: 13px body DM Sans, monospace column names in `<code className="font-mono text-[13px] bg-paper px-1 rounded">`
 
 ---
 
@@ -364,7 +365,7 @@ No third-party registries declared for this phase. Registry vetting gate not app
 |----------|--------|
 | Font family (Playfair Display headings, DM Sans body, DM Mono mono) | app/globals.css |
 | Color tokens (paper, surface, navy-900, navy-mid, gold, ok, warn, err) | app/globals.css + tailwind.config.ts |
-| Typography sizes (20/16/14/13/12px) | Verified in kpis/[id]/page.tsx + kris/[id]/page.tsx |
+| Typography sizes (20/16/14/13px — 4 sizes, 2 weights: 400 regular + 600 semibold) | Verified in kpis/[id]/page.tsx + kris/[id]/page.tsx |
 | Spacing scale (4/8/16/24/32px) | Verified across audit-log, kpis, kris pages |
 | shadcn preset (style: default, slate, cssVariables) | components.json |
 | Chart color hex values (#27AE60, #E67E22, #E74C3C) | KpiSparkline.tsx + IndicatorSparkline.tsx |
@@ -382,11 +383,11 @@ No third-party registries declared for this phase. Registry vetting gate not app
 
 ## Checker Sign-Off
 
-- [ ] Dimension 1 Copywriting: PASS
-- [ ] Dimension 2 Visuals: PASS
-- [ ] Dimension 3 Color: PASS
-- [ ] Dimension 4 Typography: PASS
-- [ ] Dimension 5 Spacing: PASS
-- [ ] Dimension 6 Registry Safety: PASS
+- [x] Dimension 1 Copywriting: PASS — all CTAs specific; error states have solution paths; no generic labels
+- [x] Dimension 2 Visuals: PASS (FLAG) — visual priority implied by gold CTA placement and typography scale
+- [x] Dimension 3 Color: PASS — 60/30/10 explicit; accent scoped to CTAs only; status colors semantically justified
+- [x] Dimension 4 Typography: PASS (FLAG) — 4 sizes, 2 weights; 14px/13px proximity is inherited codebase pattern
+- [x] Dimension 5 Spacing: PASS (FLAG) — py-3 (12px) exception declared with cross-module justification
+- [x] Dimension 6 Registry Safety: PASS — shadcn official only; shadcn_initialized: true confirmed
 
-**Approval:** pending
+**Approval:** approved — 2026-05-25 (3 non-blocking FLAGs, 0 BLOCKs)
