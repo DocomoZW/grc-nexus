@@ -507,7 +507,14 @@ Plans:
 
 **UI hint**: yes
 
-**Plans:** TBD
+**Plans:** 5 plans
+
+Plans:
+- [x] 14-01-PLAN.md — Wave 0 test stubs for forecast and anomaly detection utilities
+- [x] 14-02-PLAN.md — Forecast utility (linearRegression/forecastPoints) + ForecastChart component + SourceModule type extension
+- [ ] 14-03-PLAN.md — Per-module CSV export API route (9 modules) + Analytics Export admin page + accordion API docs
+- [ ] 14-04-PLAN.md — Anomaly detection service + AnomalyAlertEmail template + cron route (GET) + vercel.json
+- [ ] 14-05-PLAN.md — KPI and KRI detail page ForecastChart integration + human verification checkpoint
 
 
 
@@ -629,7 +636,7 @@ Plans:
 
 **UI hint**: yes
 
-**Plans:** TBD
+**Plans:** 2/5 plans executed
 
 
 
