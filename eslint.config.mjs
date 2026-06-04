@@ -12,6 +12,7 @@ const eslintConfig = [
   {
     ignores: [
       '.next/**',
+      '.firebase/**',
       'node_modules/**',
       'next-env.d.ts',
       'types/supabase.fromhead.txt',
