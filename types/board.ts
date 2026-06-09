@@ -42,6 +42,34 @@ export const ACTION_STATUS_BADGE: Record<ActionItemStatus, string> = {
   cancelled: 'bg-zinc-100 text-zinc-700 border-zinc-200',
 }
 
+export interface BoardMemberRow {
+  id: string
+  user_id: string
+  institution_id: string
+  role: string
+  is_chair: boolean
+  is_ceo: boolean
+  is_executive: boolean
+  independence_status: 'independent' | 'not_independent' | 'under_review' | 'unknown'
+  independence_rationale: string | null
+  appointed_at: string
+  appointed_by: string | null
+  term_years: number
+  board_count: number
+  is_in_database: boolean
+  qualifications: string[]
+  committee_memberships: string[]
+  last_reviewed_at: string | null
+  status: 'active' | 'suspended' | 'terminated' | 'expired'
+  created_at: string
+  updated_at: string
+  // Joined fields
+  first_name?: string | null
+  last_name?: string | null
+  gender?: string | null
+  full_name?: string | null
+}
+
 export interface BoardMeetingRow {
   id: string
   title: string

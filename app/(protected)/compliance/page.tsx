@@ -1,15 +1,16 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { CheckSquare, AlertCircle, Clock, ClipboardList } from 'lucide-react'
+import { CheckSquare, AlertCircle, Clock, ClipboardList, Shield, Gavel } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import type { AppRole } from '@/types/auth'
 import { getComplianceStats, listObligations } from '@/lib/compliance/queries'
+import { getPecgComplianceScore } from '@/lib/compliance/pecg-queries'
 import { computeCompliancePercentage, OBLIGATION_STATUS_BADGE } from '@/lib/compliance/compliance-utils'
 import { ComplianceStatCard } from '@/components/compliance/ComplianceStatCard'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { cn } from '@/lib/utils'
-import type { RegulatoryFramework, ObligationStatus } from '@/types/compliance'
-import { REGULATORY_FRAMEWORK_LABELS, OBLIGATION_STATUS_LABELS } from '@/types/compliance'
+import type { RegulatoryFramework, ObligationStatus, PECGComplianceScore } from '@/types/compliance'
+import { REGULATORY_FRAMEWORK_LABELS, OBLIGATION_STATUS_LABELS, PECG_RISK_LEVEL_BADGE, PECG_RISK_LEVEL_LABELS } from '@/types/compliance'
 
 export const dynamic = 'force-dynamic'
 
@@ -64,9 +65,10 @@ export default async function ComplianceDashboardPage() {
     redirect('/dashboard')
   }
 
-  const [stats, obligationsResult] = await Promise.all([
+  const [stats, obligationsResult, pecgScore] = await Promise.all([
     getComplianceStats(supabase),
     listObligations(supabase),
+    getPecgComplianceScore(supabase),
   ])
 
   const obligationsWithStatus = stats.obligations as unknown as { status: ObligationStatus }[]
@@ -137,6 +139,57 @@ export default async function ComplianceDashboardPage() {
           description="Due within the next 30 days"
         />
       </div>
+
+      {/* PECG Compliance Score Cards */}
+      {pecgScore && (
+        <div className="mb-6 rounded-[10px] border border-paper-border bg-white p-6 shadow-card">
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="text-[16px] font-semibold text-navy-900">PECG Act & ZimCode Compliance</h2>
+            <Link
+              href="/compliance/pecg"
+              className="text-[13px] text-navy-mid hover:text-navy-900 hover:underline"
+            >
+              View PECG compliance details
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+            <ComplianceStatCard
+              icon={Shield}
+              label="Overall Score"
+              value={`${pecgScore.overall_score}%`}
+              accent={pecgScore.overall_score >= 80 ? 'text-ok' : pecgScore.overall_score >= 50 ? 'text-warn' : 'text-err'}
+              description={`${pecgScore.compliant_count} of ${pecgScore.check_count} checks passed`}
+            />
+            <ComplianceStatCard
+              icon={Gavel}
+              label="PECG Act Score"
+              value={`${pecgScore.pecg_act_score}%`}
+              accent={pecgScore.pecg_act_score >= 80 ? 'text-ok' : pecgScore.pecg_act_score >= 50 ? 'text-warn' : 'text-err'}
+              description="Automated compliance against PECG Act"
+            />
+            <ComplianceStatCard
+              icon={CheckSquare}
+              label="ZimCode Score"
+              value={`${pecgScore.zimcode_score}%`}
+              accent={pecgScore.zimcode_score >= 80 ? 'text-ok' : pecgScore.zimcode_score >= 50 ? 'text-warn' : 'text-err'}
+              description="Compliance with ZimCode principles"
+            />
+            <ComplianceStatCard
+              icon={AlertCircle}
+              label="Risk Level"
+              value={pecgScore.risk_level.toUpperCase()}
+              accent={
+                pecgScore.risk_level === 'low' ? 'text-ok' :
+                pecgScore.risk_level === 'medium' ? 'text-warn' :
+                pecgScore.risk_level === 'high' ? 'text-err' : 'text-err'
+              }
+              description={
+                `${pecgScore.non_compliant_count} critical, ${pecgScore.at_risk_count} at-risk`
+              }
+            />
+          </div>
+        </div>
+      )}
 
       {/* Obligations preview table */}
       <div className="rounded-[10px] border border-paper-border bg-white p-6 shadow-card">
