@@ -108,6 +108,11 @@ export default async function DashboardPage({
     module: getSingleParam(params.module),
   })
 
+  const [kriStats, kciStats] = await Promise.all([
+    getKriDashboardStats(supabase),
+    getKciDashboardStats(supabase),
+  ])
+
   const canExportGovernanceReport = activeRole
     ? ['admin', 'ceo', 'audit-officer'].includes(activeRole)
     : false

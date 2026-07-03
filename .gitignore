@@ -33,6 +33,9 @@ yarn-error.log*
 # Firebase
 .firebase/
 
+# Parallel Firebase-rewrite app (not part of this deploy)
+hurument/
+
 # TypeScript
 *.tsbuildinfo
 next-env.d.ts
